@@ -461,7 +461,7 @@ const FlavorLab = () => {
       <Navigation />
       
       {/* Hero Section */}
-      <section className="pt-40 md:pt-48 pb-8 md:pb-12 relative">
+      <section className="pt-36 md:pt-48 pb-8 md:pb-12 relative">
         <div className="max-w-7xl mx-auto px-4 md:px-6">
           <motion.h1 
             className="text-3xl md:text-6xl font-light text-center mb-4 md:mb-6 tracking-wider"

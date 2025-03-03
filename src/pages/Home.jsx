@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, useAnimation } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import rasaSVG from "/images/rasa.svg";
 import textSVG from "/images/text.svg";
 import StorySection from '../components/StorySection';
@@ -9,32 +9,33 @@ const text = "Rasam is a 500-year old savory wellness tonic brewed with ancient 
 
 const TypingText = () => {
   const [displayedText, setDisplayedText] = useState("");
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isComplete, setIsComplete] = useState(false);
 
   useEffect(() => {
-    // Clear any existing timeouts
     const timeouts = [];
+    const totalCharacters = text.length;
     
-    // Type each character with a delay
     text.split('').forEach((char, index) => {
       const timeout = setTimeout(() => {
         setDisplayedText(prev => prev + char);
-      }, 15 + (index * 150)); // Start after 1.5s, then 50ms per character
+        if (index === totalCharacters - 1) {
+          setIsComplete(true);
+        }
+      }, 200 + (index * 150)); // Start after 200ms, faster typing speed
       
       timeouts.push(timeout);
     });
 
-    // Cleanup function
-    return () => {
-      timeouts.forEach(timeout => clearTimeout(timeout));
-    };
-  }, []); // Run once on mount
+    return () => timeouts.forEach(timeout => clearTimeout(timeout));
+  }, []);
 
   return (
     <motion.p 
       className="text-amber-200/90 text-base md:text-lg max-w-xl mx-auto leading-relaxed"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+      onAnimationComplete={() => isComplete}
     >
       {displayedText}
       <span className="text-amber-400 animate-pulse">|</span>
@@ -44,10 +45,10 @@ const TypingText = () => {
 
 const AnimatedLogo = ({ onComplete }) => {
   useEffect(() => {
-    // Wait for logo and typing animation
+    // Shorter wait time since we're adjusting the sequence
     const timer = setTimeout(() => {
       onComplete();
-    }, 3000); // Increased to 6 seconds to allow for typing
+    }, 1200); // Reduced to 1.2s to start typing sooner
     
     return () => clearTimeout(timer);
   }, []);
@@ -61,7 +62,7 @@ const AnimatedLogo = ({ onComplete }) => {
         className="w-full sepia-[0.1] brightness-110 contrast-[0.9] opacity-90"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 0.9, y: 0 }}
-        transition={{ duration: 1 }}
+        transition={{ duration: 0.8 }}
       />
     </div>
   );
@@ -118,16 +119,59 @@ const GridBackground = () => (
   </div>
 );
 
-const Feature = ({ title, description }) => (
+const Feature = ({ title, description, index }) => (
   <motion.div
-    className="space-y-4"
-    initial={{ opacity: 0, y: 20 }}
+    className="relative p-8 rounded-2xl border border-amber-500/10 backdrop-blur-sm"
+    initial={{ opacity: 0, y: 40 }}
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
-    transition={{ duration: 0.6 }}
+    transition={{ duration: 0.8, delay: index * 0.2 }}
   >
-    <h3 className="text-xl font-light text-amber-200">{title}</h3>
-    <p className="text-amber-100/70 leading-relaxed">{description}</p>
+    {/* Decorative corner elements */}
+    <motion.div 
+      className="absolute top-0 left-0 w-12 h-12 border-t border-l border-amber-500/20"
+      initial={{ scale: 0 }}
+      whileInView={{ scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6, delay: index * 0.2 + 0.3 }}
+    />
+    <motion.div 
+      className="absolute bottom-0 right-0 w-12 h-12 border-b border-r border-amber-500/20"
+      initial={{ scale: 0 }}
+      whileInView={{ scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6, delay: index * 0.2 + 0.3 }}
+    />
+    
+    {/* Content */}
+    <div className="space-y-4 relative">
+      <motion.h3 
+        className="text-xl font-light text-amber-200"
+        initial={{ opacity: 0, x: -20 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, delay: index * 0.2 + 0.2 }}
+      >
+        {title}
+      </motion.h3>
+      <motion.p 
+        className="text-amber-100/70 leading-relaxed"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, delay: index * 0.2 + 0.4 }}
+      >
+        {description}
+      </motion.p>
+      
+      {/* Hover effect */}
+      <motion.div
+        className="absolute inset-0 bg-amber-500/5 rounded-xl"
+        initial={{ opacity: 0 }}
+        whileHover={{ opacity: 1 }}
+        transition={{ duration: 0.3 }}
+      />
+    </div>
   </motion.div>
 );
 
@@ -501,6 +545,8 @@ const FlavorLabSection = () => {
 const Navigation = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const location = useLocation();
+  const isHomePage = location.pathname === "/";
   
   useEffect(() => {
     const handleScroll = () => {
@@ -539,9 +585,11 @@ const Navigation = () => {
         
         {/* Center: Navigation Links */}
         <div className="flex items-center justify-center gap-8">
-          <Link to="/" className="text-amber-200 hover:text-white text-sm uppercase tracking-wider transition-colors">
-            Home
-          </Link>
+          {!isHomePage && (
+            <Link to="/" className="text-amber-200 hover:text-white text-sm uppercase tracking-wider transition-colors">
+              Home
+            </Link>
+          )}
           <Link to="/flavor-lab" className="text-amber-200 hover:text-amber-400 text-sm uppercase tracking-wider transition-colors">
             Spice Lab
           </Link>
@@ -604,13 +652,15 @@ const Navigation = () => {
           transition={{ duration: 0.3 }}
         >
           <div className="px-4 py-4 flex flex-col space-y-4">
-            <Link 
-              to="/" 
-              className="text-amber-200 hover:text-white text-sm uppercase tracking-wider py-2 border-b border-amber-500/10"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Home
-            </Link>
+            {!isHomePage && (
+              <Link 
+                to="/" 
+                className="text-amber-200 hover:text-white text-sm uppercase tracking-wider py-2 border-b border-amber-500/10"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Home
+              </Link>
+            )}
             <Link 
               to="/flavor-lab" 
               className="text-amber-200 hover:text-amber-400 text-sm uppercase tracking-wider py-2 border-b border-amber-500/10"
@@ -643,6 +693,22 @@ const Navigation = () => {
 
 const LandingPage = () => {
   const [showTyping, setShowTyping] = useState(false);
+  const [showTagline, setShowTagline] = useState(false);
+
+  // Sequential animation triggers
+  useEffect(() => {
+    if (showTyping) {
+      // Calculate total typing duration based on text length (150ms per character + initial delay)
+      const typingDuration = text.length * 150 + 700; // 150ms per character + 700ms buffer
+      
+      // Show tagline after typing is complete with a small delay
+      const taglineTimer = setTimeout(() => setShowTagline(true), typingDuration + 500);
+      
+      return () => {
+        clearTimeout(taglineTimer);
+      };
+    }
+  }, [showTyping]);
 
   return (
     <div className="relative min-h-screen bg-black overflow-hidden">
@@ -653,33 +719,85 @@ const LandingPage = () => {
       {/* Hero Section */}
       <header className="relative min-h-screen flex flex-col items-center justify-center px-4 md:px-6 pt-20">
         <div className="max-w-7xl mx-auto w-full">
-          {/* Center Logo */}
           <div className="space-y-8 text-center">
-            <AnimatedLogo onComplete={() => setTimeout(() => setShowTyping(true), 400)} />
+            <AnimatedLogo onComplete={() => setShowTyping(true)} />
             
-            {/* Typing Text and Waitlist Section */}
-            <div className="space-y-12 md:space-y-16">
-              {showTyping && (
-                <>
-                  <TypingText />
-                  
-                  <motion.div 
-                    className="max-w-xl mx-auto space-y-8 md:space-y-12"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 1.5 }}
+            <div className="space-y-8 md:space-y-10">
+              {showTyping && <TypingText />}
+              
+              {showTagline && (
+                <motion.div 
+                  className="text-xl md:text-2xl font-light tracking-wide text-amber-100 relative flex items-center justify-center h-20"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {/* Initial merged state */}
+                  <motion.div
+                    className="absolute inset-0 flex items-center justify-center"
+                    initial={{ opacity: 1, scale: 1 }}
+                    animate={{ 
+                      opacity: 0,
+                      scale: 0.8,
+                      transition: { duration: 0.5, delay: 0.5 }
+                    }}
                   >
-                    <div className="space-y-3 md:space-y-4 text-center">
-                      <h2 className="text-xl md:text-2xl font-light tracking-wide text-amber-100">
-                        Ancient Roots, Modern Wellness
-                      </h2>
-                      <p className="text-amber-500 text-xs md:text-sm uppercase tracking-widest">
-                        Be the first to know when we launch
-                      </p>
-                    </div>
-                    <SlideToUnlock />
+                    <motion.span
+                      className="bg-clip-text text-transparent bg-gradient-to-r from-amber-200 to-amber-400"
+                      initial={{ filter: "blur(0px)" }}
+                      animate={{ 
+                        filter: "blur(8px)",
+                        transition: { duration: 0.5, delay: 0.5 }
+                      }}
+                    >
+                      Ancient Modern
+                    </motion.span>
                   </motion.div>
-                </>
+
+                  {/* Final split state */}
+                  <motion.div 
+                    className="absolute inset-0 flex items-center justify-center"
+                    initial={{ opacity: 0, scale: 1.2 }}
+                    animate={{ 
+                      opacity: 1,
+                      scale: 1,
+                      transition: { duration: 0.5, delay: 1 }
+                    }}
+                  >
+                    <div className="flex items-center gap-2">
+                      <motion.span
+                        initial={{ x: -20, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        transition={{ duration: 0.6, delay: 1 }}
+                      >
+                        Ancient
+                      </motion.span>
+                      <motion.span
+                        initial={{ x: -10, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        transition={{ duration: 0.6, delay: 1.2 }}
+                        className="text-amber-400"
+                      >
+                        Roots,
+                      </motion.span>
+                      <motion.span
+                        initial={{ x: 20, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        transition={{ duration: 0.6, delay: 1.4 }}
+                      >
+                        Modern
+                      </motion.span>
+                      <motion.span
+                        initial={{ x: 10, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        transition={{ duration: 0.6, delay: 1.6 }}
+                        className="text-amber-400"
+                      >
+                        Wellness
+                      </motion.span>
+                    </div>
+                  </motion.div>
+                </motion.div>
               )}
             </div>
           </div>
@@ -688,23 +806,66 @@ const LandingPage = () => {
 
       {/* Features Section */}
       <section className="py-16 md:py-24 relative">
+        {/* Background decorative elements */}
+        <motion.div 
+          className="absolute inset-0 opacity-30"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 0.3 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1 }}
+        >
+          <div className="absolute top-0 left-0 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 right-0 w-64 h-64 bg-amber-700/10 rounded-full blur-3xl" />
+        </motion.div>
+        
         <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 px-4 md:px-6">
           <Feature
+            index={0}
             title="Ancient Wellness Tradition"
             description="Drawing from 500 years of traditional medicine, our tonic harnesses the power of time-tested herbs and spices."
           />
           <Feature
+            index={1}
             title="Modern Scientific Backing"
             description="We've combined ancient wisdom with modern research to create a formula that's both traditional and scientifically sound."
           />
           <Feature
+            index={2}
             title="Ethically Sourced Ingredients"
             description="Every ingredient is carefully selected and ethically sourced to ensure the highest quality and sustainability."
           />
           <Feature
+            index={3}
             title="Balanced for Modern Life"
             description="Formulated to provide balance and support for the demands and stresses of contemporary living."
           />
+        </div>
+      </section>
+
+      {/* Waitlist Section */}
+      <section className="py-16 md:py-24 relative">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
+          <motion.div 
+            className="max-w-xl mx-auto space-y-6 md:space-y-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="space-y-3 md:space-y-4 text-center">
+              <motion.h2 
+                className="text-2xl md:text-4xl font-light text-amber-500 tracking-wider"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+              >
+                BE THE FIRST TO KNOW WHEN WE LAUNCH
+              </motion.h2>
+            </div>
+            <div className="mt-8">
+              <SlideToUnlock />
+            </div>
+          </motion.div>
         </div>
       </section>
 
