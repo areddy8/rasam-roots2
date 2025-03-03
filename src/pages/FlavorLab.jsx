@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import rasaSVG from "/images/rasa.svg";
 
 const Navigation = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [currentWord, setCurrentWord] = useState(0);
+  const words = ["Essence", "Nectar", "Taste"];
   
   useEffect(() => {
     const handleScroll = () => {
@@ -14,6 +16,14 @@ const Navigation = () => {
     
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const wordInterval = setInterval(() => {
+      setCurrentWord((prev) => (prev + 1) % words.length);
+    }, 2000);
+    
+    return () => clearInterval(wordInterval);
   }, []);
   
   return (
@@ -30,16 +40,8 @@ const Navigation = () => {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
-          className="flex flex-col items-start gap-2"
+          className="flex items-center"
         >
-          <motion.p
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-amber-200/70 text-xs tracking-wide"
-          >
-            Rasam is a 500-year old savory wellness tonic brewed with ancient spices and herbs.
-          </motion.p>
           <motion.img
             src={rasaSVG}
             alt="Rasa Sanskrit"
@@ -70,25 +72,31 @@ const Navigation = () => {
         {/* Right: Sanskrit Origin */}
         <div className="text-right space-y-4">
           <div className="text-sm uppercase tracking-[0.2em] text-amber-200/70">Sanskrit Origin</div>
-          <div className="flex items-center justify-end gap-3 text-base md:text-lg">
+          <motion.div 
+            className="flex items-center justify-end gap-3 text-base md:text-lg"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8 }}
+          >
             <span className="text-amber-100 uppercase tracking-[0.15em]">RASA is</span>
-            <span className="text-amber-500 uppercase tracking-[0.15em]">Essence</span>
-          </div>
+            <AnimatePresence mode="wait">
+              <motion.span 
+                key={words[currentWord]}
+                className="text-amber-500 uppercase tracking-[0.15em] min-w-[5ch] inline-block text-center"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+              >
+                {words[currentWord]}
+              </motion.span>
+            </AnimatePresence>
+          </motion.div>
         </div>
       </div>
 
       {/* Mobile Navigation */}
-      <div className="md:hidden px-4 flex flex-col gap-2">
-        {/* Description Text */}
-        <motion.p
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-amber-200/70 text-xs tracking-wide"
-        >
-          Rasam is a 500-year old savory wellness tonic brewed with ancient spices and herbs.
-        </motion.p>
-        
+      <div className="md:hidden px-4">
         {/* Logo and Menu Button */}
         <div className="flex justify-between items-center">
           <motion.div
