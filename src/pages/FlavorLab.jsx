@@ -195,7 +195,7 @@ const GridBackground = () => (
   </div>
 );
 
-const FlavorCard = ({ flavor, index, onClick }) => {
+const FlavorCard = ({ flavor, index, isSelected, onClick }) => {
   const [hovered, setHovered] = useState(false);
   
   // Map colors to warm tones
@@ -212,67 +212,58 @@ const FlavorCard = ({ flavor, index, onClick }) => {
   
   return (
     <motion.div
-      className="relative aspect-square cursor-pointer"
-      initial={{ opacity: 0, scale: 0.8 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
+      className={`w-full h-full bg-${warmColor}-500/10 rounded-2xl border border-${warmColor}-500/20 flex flex-col items-center justify-center p-4 sm:p-6 backdrop-blur-sm overflow-hidden ${isSelected ? 'ring-2 ring-amber-500' : ''}`}
+      whileHover={{ scale: isSelected ? 1 : 1.05 }}
+      transition={{ type: "spring", stiffness: 300 }}
       onHoverStart={() => setHovered(true)}
       onHoverEnd={() => setHovered(false)}
-      onClick={onClick}
     >
-      <motion.div 
-        className={`w-full h-full bg-${warmColor}-500/10 rounded-2xl border border-${warmColor}-500/20 flex flex-col items-center justify-center p-4 sm:p-6 backdrop-blur-sm overflow-hidden`}
-        whileHover={{ scale: 1.05 }}
-        transition={{ type: "spring", stiffness: 300 }}
+      {/* Animated Particle Background */}
+      <div className="absolute inset-0 overflow-hidden rounded-2xl">
+        {[...Array(8)].map((_, i) => (
+          <motion.div
+            key={i}
+            className={`absolute w-2 h-2 rounded-full bg-${warmColor}-500/30`}
+            initial={{ 
+              x: Math.random() * 100 + "%", 
+              y: Math.random() * 100 + "%", 
+              scale: Math.random() * 0.5 + 0.5 
+            }}
+            animate={{ 
+              x: [null, Math.random() * 100 + "%", Math.random() * 100 + "%"],
+              y: [null, Math.random() * 100 + "%", Math.random() * 100 + "%"],
+              opacity: [0.2, 0.6, 0.2]
+            }}
+            transition={{ 
+              duration: Math.random() * 10 + 10, 
+              repeat: Infinity,
+              ease: "linear" 
+            }}
+          />
+        ))}
+      </div>
+      
+      <motion.div
+        className="relative z-10 flex flex-col items-center"
+        animate={hovered ? { y: -10 } : { y: 0 }}
+        transition={{ duration: 0.3 }}
       >
-        {/* Animated Particle Background */}
-        <div className="absolute inset-0 overflow-hidden rounded-2xl">
-          {[...Array(8)].map((_, i) => (
-            <motion.div
-              key={i}
-              className={`absolute w-2 h-2 rounded-full bg-${warmColor}-500/30`}
-              initial={{ 
-                x: Math.random() * 100 + "%", 
-                y: Math.random() * 100 + "%", 
-                scale: Math.random() * 0.5 + 0.5 
-              }}
-              animate={{ 
-                x: [null, Math.random() * 100 + "%", Math.random() * 100 + "%"],
-                y: [null, Math.random() * 100 + "%", Math.random() * 100 + "%"],
-                opacity: [0.2, 0.6, 0.2]
-              }}
-              transition={{ 
-                duration: Math.random() * 10 + 10, 
-                repeat: Infinity,
-                ease: "linear" 
-              }}
-            />
-          ))}
-        </div>
-        
-        <motion.div
-          className="relative z-10 flex flex-col items-center"
-          animate={hovered ? { y: -10 } : { y: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <h3 className={`text-${warmColor}-400 text-lg sm:text-xl md:text-2xl font-light tracking-wider mb-2`}>
-            {flavor.name}
-          </h3>
-          <p className="text-amber-200/70 text-xs sm:text-sm text-center">
-            {flavor.description}
-          </p>
-        </motion.div>
-        
-        <motion.div 
-          className="mt-4 opacity-0 absolute bottom-4 sm:bottom-6"
-          animate={hovered ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-          transition={{ duration: 0.3 }}
-        >
-          <button className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-${warmColor}-400 border border-${warmColor}-500/30 text-xs uppercase tracking-wider`}>
-            Learn More
-          </button>
-        </motion.div>
+        <h3 className={`text-${warmColor}-400 text-lg sm:text-xl md:text-2xl font-light tracking-wider mb-2`}>
+          {flavor.name}
+        </h3>
+        <p className="text-amber-200/70 text-xs sm:text-sm text-center">
+          {flavor.description}
+        </p>
+      </motion.div>
+      
+      <motion.div 
+        className="mt-4 opacity-0 absolute bottom-4 sm:bottom-6"
+        animate={hovered ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+        transition={{ duration: 0.3 }}
+      >
+        <button className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-${warmColor}-400 border border-${warmColor}-500/30 text-xs uppercase tracking-wider`}>
+          Learn More
+        </button>
       </motion.div>
     </motion.div>
   );
@@ -455,6 +446,14 @@ const FlavorLab = () => {
   ];
 
   const [selectedFlavor, setSelectedFlavor] = useState(null);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  const handleFlavorSelect = (flavor) => {
+    setIsAnimating(true);
+    setSelectedFlavor(flavor);
+    // Reset animation state after animation completes
+    setTimeout(() => setIsAnimating(false), 600);
+  };
 
   return (
     <div className="relative min-h-screen bg-black text-white overflow-hidden">
@@ -487,44 +486,79 @@ const FlavorLab = () => {
         <div className="absolute -top-24 -right-24 w-48 md:w-64 h-48 md:h-64 bg-amber-700/5 rounded-full blur-3xl"></div>
       </section>
       
-      {/* Flavor Grid */}
+      {/* Flavor Grid with Animation */}
       <section className="py-12 md:py-16 relative">
         <div className="max-w-7xl mx-auto px-4 md:px-6">
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-            {flavors.map((flavor, index) => (
-              <FlavorCard 
-                key={flavor.name} 
-                flavor={flavor} 
-                index={index} 
-                onClick={() => setSelectedFlavor(flavor)}
-              />
-            ))}
+            {/* Selected Flavor at Top */}
+            {selectedFlavor && (
+              <motion.div
+                layout
+                className="col-span-full md:col-span-2 aspect-square md:aspect-[2/1]"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+              >
+                <FlavorCard 
+                  flavor={selectedFlavor}
+                  index={0}
+                  isSelected={true}
+                />
+              </motion.div>
+            )}
+
+            {/* Description Below Selected */}
+            {selectedFlavor && (
+              <motion.div
+                className="col-span-full"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
+                <FlavorDetail flavor={selectedFlavor} />
+                <motion.button
+                  className="mt-8 text-amber-200/70 hover:text-amber-200 flex items-center gap-2"
+                  onClick={() => setSelectedFlavor(null)}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.3 }}
+                >
+                  <span>←</span>
+                  <span>Back to all spices</span>
+                </motion.button>
+              </motion.div>
+            )}
+
+            {/* Other Flavors Grid */}
+            <AnimatePresence>
+              {flavors.map((flavor, index) => (
+                selectedFlavor?.name !== flavor.name && (
+                  <motion.div
+                    key={flavor.name}
+                    layout
+                    className="aspect-square cursor-pointer"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ 
+                      opacity: selectedFlavor ? 0.7 : 1,
+                      y: 0,
+                      scale: 1
+                    }}
+                    exit={{ opacity: 0, y: 20 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    onClick={() => handleFlavorSelect(flavor)}
+                  >
+                    <FlavorCard 
+                      flavor={flavor} 
+                      index={index}
+                      isSelected={false}
+                    />
+                  </motion.div>
+                )
+              ))}
+            </AnimatePresence>
           </div>
         </div>
       </section>
-      
-      {/* Selected Flavor Detail */}
-      {selectedFlavor && (
-        <section className="py-12 md:py-16 relative">
-          <div className="max-w-7xl mx-auto px-4 md:px-6">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="mb-8 md:mb-12"
-            >
-              <button 
-                className="text-amber-200/70 hover:text-amber-200 flex items-center gap-2"
-                onClick={() => setSelectedFlavor(null)}
-              >
-                <span>←</span>
-                <span>Back to all flavors</span>
-              </button>
-            </motion.div>
-            
-            <FlavorDetail flavor={selectedFlavor} />
-          </div>
-        </section>
-      )}
       
       {/* Footer */}
       <footer className="py-8 text-center text-sm text-amber-500/50 border-t border-amber-500/10 mt-8 md:mt-16">
