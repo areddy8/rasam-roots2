@@ -11,14 +11,23 @@ const TypingText = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    if (currentIndex < text.length) {
+    // Clear any existing timeouts
+    const timeouts = [];
+    
+    // Type each character with a delay
+    text.split('').forEach((char, index) => {
       const timeout = setTimeout(() => {
-        setDisplayedText(prev => prev + text[currentIndex]);
-        setCurrentIndex(prev => prev + 1);
-      }, 50);
-      return () => clearTimeout(timeout);
-    }
-  }, [currentIndex]);
+        setDisplayedText(prev => prev + char);
+      }, 15 + (index * 150)); // Start after 1.5s, then 50ms per character
+      
+      timeouts.push(timeout);
+    });
+
+    // Cleanup function
+    return () => {
+      timeouts.forEach(timeout => clearTimeout(timeout));
+    };
+  }, []); // Run once on mount
 
   return (
     <motion.p 
@@ -34,10 +43,10 @@ const TypingText = () => {
 
 const AnimatedLogo = ({ onComplete }) => {
   useEffect(() => {
-    // Trigger onComplete after text animation
+    // Wait for logo and typing animation
     const timer = setTimeout(() => {
       onComplete();
-    }, 1000);
+    }, 3000); // Increased to 6 seconds to allow for typing
     
     return () => clearTimeout(timer);
   }, []);

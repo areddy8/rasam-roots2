@@ -30,14 +30,22 @@ const Navigation = () => {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
-          className="flex items-center"
+          className="flex flex-col items-start gap-2"
         >
+          <motion.p
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-amber-200/70 text-xs tracking-wide"
+          >
+            Rasam is a 500-year old savory wellness tonic brewed with ancient spices and herbs.
+          </motion.p>
           <motion.img
             src={rasaSVG}
             alt="Rasa Sanskrit"
-            className="w-32 md:w-40 opacity-95"
+            className="w-32 md:w-40 opacity-80 brightness-[0.95] saturate-[0.9] contrast-[0.95]"
             initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 0.95, scale: 1 }}
+            animate={{ opacity: 0.8, scale: 1 }}
             transition={{ duration: 1 }}
           />
         </motion.div>
@@ -70,39 +78,51 @@ const Navigation = () => {
       </div>
 
       {/* Mobile Navigation */}
-      <div className="md:hidden px-4 flex justify-between items-center">
-        {/* Logo */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
+      <div className="md:hidden px-4 flex flex-col gap-2">
+        {/* Description Text */}
+        <motion.p
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="text-amber-200/70 text-xs tracking-wide"
         >
-          <motion.img
-            src={rasaSVG}
-            alt="Rasa Sanskrit"
-            className="h-10 opacity-95"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 0.95, scale: 1 }}
-            transition={{ duration: 1 }}
-          />
-        </motion.div>
+          Rasam is a 500-year old savory wellness tonic brewed with ancient spices and herbs.
+        </motion.p>
+        
+        {/* Logo and Menu Button */}
+        <div className="flex justify-between items-center">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <motion.img
+              src={rasaSVG}
+              alt="Rasa Sanskrit"
+              className="h-10 opacity-80 brightness-[0.95] saturate-[0.9] contrast-[0.95]"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 0.8, scale: 1 }}
+              transition={{ duration: 1 }}
+            />
+          </motion.div>
 
-        {/* Mobile Menu Button */}
-        <motion.button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="text-amber-400 p-2"
-          whileTap={{ scale: 0.95 }}
-        >
-          {mobileMenuOpen ? (
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          ) : (
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          )}
-        </motion.button>
+          {/* Mobile Menu Button */}
+          <motion.button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="text-amber-400 p-2"
+            whileTap={{ scale: 0.95 }}
+          >
+            {mobileMenuOpen ? (
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            )}
+          </motion.button>
+        </div>
       </div>
 
       {/* Mobile Menu */}
@@ -434,7 +454,7 @@ const FlavorLab = () => {
       <Navigation />
       
       {/* Hero Section */}
-      <section className="pt-28 md:pt-32 pb-12 md:pb-16 relative">
+      <section className="pt-32 md:pt-40 pb-12 md:pb-16 relative">
         <div className="max-w-7xl mx-auto px-4 md:px-6">
           <motion.h1 
             className="text-3xl md:text-6xl font-light text-center mb-4 md:mb-6 tracking-wider"
