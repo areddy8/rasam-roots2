@@ -113,10 +113,10 @@ const StorySection = () => {
   });
 
   return (
-    <section className="py-16 md:py-24 relative overflow-hidden">
+    <section className="py-12 md:py-20 relative">
       <div className="max-w-7xl mx-auto px-4 md:px-6">
         <motion.h2
-          className="text-3xl md:text-4xl font-light text-center mb-12"
+          className="text-3xl md:text-4xl font-light text-center mb-10"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -125,9 +125,9 @@ const StorySection = () => {
         </motion.h2>
 
         {/* Progress bar */}
-        <div className="relative h-1 bg-amber-500/10 rounded-full mb-8 overflow-hidden">
+        <div className="story-progress mb-6">
           <motion.div 
-            className="absolute inset-y-0 left-0 bg-amber-500/30 rounded-full"
+            className="story-progress-bar"
             style={{ scaleX: springProgress, transformOrigin: "left" }}
           />
         </div>
@@ -135,14 +135,20 @@ const StorySection = () => {
         {/* Horizontal scroll container */}
         <div 
           ref={containerRef}
-          className="overflow-x-scroll hide-scrollbar"
+          className="overflow-x-scroll overflow-y-hidden custom-scrollbar"
           style={{ WebkitOverflowScrolling: 'touch' }}
         >
-          <div className="flex gap-8 pb-8" style={{ width: `${storyScenes.length * 70}vw` }}>
+          <div className="flex gap-6 md:gap-8" style={{ 
+            width: 'fit-content',
+            paddingRight: 'calc(100% - 55vw)',
+            '@media (min-width: 768px)': {
+              paddingRight: 'calc(100% - 45vw)'
+            }
+          }}>
             {storyScenes.map((scene, index) => (
               <motion.div
                 key={scene.id}
-                className="flex-none w-[65vw] md:w-[55vw] space-y-6"
+                className="flex-none w-[55vw] md:w-[45vw] space-y-4"
                 initial={{ opacity: 0, x: 50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, margin: "-20%" }}
@@ -150,9 +156,9 @@ const StorySection = () => {
               >
                 <IllustrationScene scene={scene} progress={springProgress} />
                 
-                <div className="space-y-3">
+                <div className="space-y-2">
                   <motion.h3 
-                    className={`text-${scene.accent}-400 text-xl md:text-2xl font-light`}
+                    className={`text-${scene.accent}-400 text-lg md:text-xl font-light`}
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
@@ -161,7 +167,7 @@ const StorySection = () => {
                     {scene.title}
                   </motion.h3>
                   <motion.p 
-                    className="text-amber-200/70 leading-relaxed text-sm md:text-base"
+                    className="text-amber-200/70 leading-relaxed text-sm"
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
@@ -177,7 +183,7 @@ const StorySection = () => {
 
         {/* Scroll hint */}
         <motion.div
-          className="hidden md:flex items-center justify-center mt-8 text-amber-400/50 gap-2"
+          className="hidden md:flex items-center justify-center mt-4 text-amber-400/50 gap-2"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1 }}

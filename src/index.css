@@ -19,6 +19,35 @@
   /* Add additional styles as needed */
   
 @layer utilities {
+  /* Custom scrollbar styling */
+  .custom-scrollbar {
+    scrollbar-width: none;  /* Firefox */
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar {
+    display: none; /* Hide the default scrollbar */
+  }
+
+  .story-progress {
+    position: relative;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(to right, rgba(217, 119, 6, 0.05), rgba(217, 119, 6, 0.1), rgba(217, 119, 6, 0.05));
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .story-progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: linear-gradient(to right, rgba(217, 119, 6, 0.3), rgba(217, 119, 6, 0.4), rgba(217, 119, 6, 0.3));
+    border-radius: 999px;
+  }
+
+  /* Hide scrollbar but keep functionality */
   .hide-scrollbar {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
