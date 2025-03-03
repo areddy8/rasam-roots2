@@ -58,7 +58,7 @@ const Navigation = () => {
             Home
           </Link>
           <Link to="/flavor-lab" className="text-amber-400 text-sm uppercase tracking-wider">
-            Flavor Lab
+            Spice Lab
           </Link>
           <motion.button
             whileHover={{ scale: 1.05 }}
@@ -107,9 +107,9 @@ const Navigation = () => {
             <motion.img
               src={rasaSVG}
               alt="Rasa Sanskrit"
-              className="h-10 opacity-70 brightness-[0.85] saturate-[0.85] contrast-[0.9]"
+              className="h-14 md:h-16 opacity-80 brightness-[0.95] saturate-[0.9] contrast-[0.9]"
               initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 0.7, scale: 1 }}
+              animate={{ opacity: 0.8, scale: 1 }}
               transition={{ duration: 1 }}
             />
           </motion.div>
@@ -152,10 +152,10 @@ const Navigation = () => {
             </Link>
             <Link 
               to="/flavor-lab" 
-              className="text-amber-400 text-sm uppercase tracking-wider py-2 border-b border-amber-500/10"
+              className="text-amber-200 hover:text-amber-400 text-sm uppercase tracking-wider py-2 border-b border-amber-500/10"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Flavor Lab
+              Spice Lab
             </Link>
             <motion.button
               whileTap={{ scale: 0.95 }}
@@ -470,7 +470,7 @@ const FlavorLab = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            FLAVOR <span className="text-amber-500">LAB</span>
+            SPICE <span className="text-amber-500">LAB</span>
           </motion.h1>
           <motion.p 
             className="text-amber-200/70 max-w-2xl mx-auto text-center text-sm md:text-base"

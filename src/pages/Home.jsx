@@ -183,7 +183,7 @@ const SlideToUnlock = () => {
           </motion.div>
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <span className="text-amber-400 text-xs sm:text-sm uppercase tracking-widest">
-              Slide to Unlock Your Flavor
+              Slide to Unlock Your Spice
             </span>
           </div>
         </div>
@@ -479,7 +479,7 @@ const FlavorLabSection = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.98 }}
           >
-            <span>Enter Flavor Lab</span>
+            <span>Enter Spice Lab</span>
             <motion.span
               animate={{ x: [0, 5, 0] }}
               transition={{ repeat: Infinity, duration: 1.5 }}
@@ -542,7 +542,7 @@ const Navigation = () => {
             Home
           </Link>
           <Link to="/flavor-lab" className="text-amber-200 hover:text-amber-400 text-sm uppercase tracking-wider transition-colors">
-            Flavor Lab
+            Spice Lab
           </Link>
           <motion.button
             whileHover={{ scale: 1.05 }}
@@ -568,7 +568,7 @@ const Navigation = () => {
           <motion.img
             src={rasaSVG}
             alt="Rasa Sanskrit"
-            className="h-10 opacity-95"
+            className="h-14 md:h-16 opacity-95"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 0.95, scale: 1 }}
             transition={{ duration: 1 }}
@@ -615,7 +615,7 @@ const Navigation = () => {
               className="text-amber-200 hover:text-amber-400 text-sm uppercase tracking-wider py-2 border-b border-amber-500/10"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Flavor Lab
+              Spice Lab
             </Link>
             <motion.button
               whileTap={{ scale: 0.95 }}
@@ -717,7 +717,7 @@ const LandingPage = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            DISCOVER OUR <span className="text-amber-500">FLAVOR LAB</span>
+            DISCOVER OUR <span className="text-amber-500">SPICE LAB</span>
           </motion.h2>
           <motion.p 
             className="text-amber-200/70 max-w-2xl mx-auto mb-8 md:mb-10 text-sm md:text-base"
@@ -741,7 +741,7 @@ const LandingPage = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <span>Enter Flavor Lab</span>
+                <span>Enter Spice Lab</span>
                 <motion.span
                   animate={{ x: [0, 5, 0] }}
                   transition={{ repeat: Infinity, duration: 1.5 }}
