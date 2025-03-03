@@ -248,19 +248,43 @@ const FallingElements = () => {
     {
       path: "M0 0L10 0L5 10z", // Triangle spice
       className: "stroke-amber-400/10 stroke-1 fill-transparent"
+    },
+    // Add pepper SVG with higher weight to appear more frequently
+    {
+      type: "pepper",
+      className: "text-red-500/40",
+      weight: 3 // This will make peppers appear more often
+    },
+    // Add herb SVG
+    {
+      type: "herb",
+      className: "text-emerald-500/40",
+      weight: 3 // Same weight as pepper
     }
   ];
 
-  // Generate 20 random elements
+  // Generate 20 random elements with weighted selection
   const fallingElements = Array.from({ length: 20 }, (_, i) => {
-    const element = elements[Math.floor(Math.random() * elements.length)];
-    const size = Math.random() * 30 + 15; // 15-45px
+    // Create weighted array for selection
+    const weightedElements = elements.flatMap(el => 
+      Array(el.weight || 1).fill(el)
+    );
+    const element = weightedElements[Math.floor(Math.random() * weightedElements.length)];
+    
+    // Adjust size range for SVG elements
+    const size = element.type ? 
+      Math.random() * 40 + 25 // 25-65px for SVG elements
+      : Math.random() * 30 + 15; // 15-45px for other elements
+    
     const left = Math.random() * 100; // 0-100%
     const delay = Math.random() * 5; // 0-5s
     const duration = Math.random() * 10 + 15; // 15-25s
     const rotation = Math.random() * 360; // 0-360deg
     const rotationDuration = Math.random() * 20 + 10; // 10-30s
-    const opacity = Math.random() * 0.05 + 0.05; // 0.05-0.1
+    // Higher opacity for SVG elements
+    const opacity = element.type ?
+      Math.random() * 0.3 + 0.2 // 0.2-0.5 for SVG elements
+      : Math.random() * 0.05 + 0.05; // 0.05-0.1 for other elements
 
     return {
       ...element,
@@ -299,12 +323,45 @@ const FallingElements = () => {
           }}
           style={{ width: el.size, height: el.size }}
         >
-          <svg
-            viewBox="0 0 10 10"
-            className={`w-full h-full ${el.className}`}
-          >
-            <path d={el.path} />
-          </svg>
+          {el.type === "pepper" ? (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className={`w-full h-full ${el.className}`}
+            >
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+              <path d="M13 11c0 2.21 -2.239 4 -5 4s-5 -1.79 -5 -4a8 8 0 1 0 16 0a3 3 0 0 0 -6 0" />
+              <path d="M16 8c0 -2 2 -4 4 -4" />
+            </svg>
+          ) : el.type === "herb" ? (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className={`w-full h-full ${el.className}`}
+            >
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+              <path d="M12 10a6 6 0 0 0 -6 -6h-3v2a6 6 0 0 0 6 6h3" />
+              <path d="M12 14a6 6 0 0 1 6 -6h3v1a6 6 0 0 1 -6 6h-3" />
+              <path d="M12 20l0 -10" />
+            </svg>
+          ) : (
+            <svg
+              viewBox="0 0 10 10"
+              className={`w-full h-full ${el.className}`}
+            >
+              <path d={el.path} />
+            </svg>
+          )}
         </motion.div>
       ))}
     </div>
