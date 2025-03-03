@@ -5,6 +5,7 @@ import rasaSVG from "/images/rasa.svg";
 
 const Navigation = () => {
   const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   useEffect(() => {
     const handleScroll = () => {
@@ -22,7 +23,8 @@ const Navigation = () => {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="max-w-7xl mx-auto px-6 grid grid-cols-3 items-center">
+      {/* Desktop Navigation */}
+      <div className="max-w-7xl mx-auto px-4 md:px-6 hidden md:grid grid-cols-3 items-center">
         {/* Left: Rasa Sanskrit */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
@@ -66,6 +68,86 @@ const Navigation = () => {
           </div>
         </div>
       </div>
+
+      {/* Mobile Navigation */}
+      <div className="md:hidden px-4 flex justify-between items-center">
+        {/* Logo */}
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <motion.img
+            src={rasaSVG}
+            alt="Rasa Sanskrit"
+            className="h-10 opacity-95"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 0.95, scale: 1 }}
+            transition={{ duration: 1 }}
+          />
+        </motion.div>
+
+        {/* Mobile Menu Button */}
+        <motion.button
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="text-amber-400 p-2"
+          whileTap={{ scale: 0.95 }}
+        >
+          {mobileMenuOpen ? (
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          )}
+        </motion.button>
+      </div>
+
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <motion.div
+          className="md:hidden bg-black/90 backdrop-blur-md"
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          exit={{ opacity: 0, height: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <div className="px-4 py-4 flex flex-col space-y-4">
+            <Link 
+              to="/" 
+              className="text-amber-200 hover:text-white text-sm uppercase tracking-wider py-2 border-b border-amber-500/10"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Home
+            </Link>
+            <Link 
+              to="/flavor-lab" 
+              className="text-amber-400 text-sm uppercase tracking-wider py-2 border-b border-amber-500/10"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Flavor Lab
+            </Link>
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              className="px-4 py-2 bg-amber-500/10 border border-amber-500/30 rounded-full text-amber-400 text-sm uppercase tracking-wider hover:bg-amber-500/20 transition-colors self-start"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Join Waitlist
+            </motion.button>
+            
+            {/* Mobile Sanskrit Origin */}
+            <div className="pt-2 space-y-2">
+              <div className="text-xs uppercase tracking-[0.2em] text-amber-200/70">Sanskrit Origin</div>
+              <div className="flex items-center gap-2 text-sm">
+                <span className="text-amber-100 uppercase tracking-[0.15em]">RASA is</span>
+                <span className="text-amber-500 uppercase tracking-[0.15em]">Essence</span>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      )}
     </motion.nav>
   );
 };
@@ -85,7 +167,7 @@ const GridBackground = () => (
   </div>
 );
 
-const FlavorCard = ({ flavor, index }) => {
+const FlavorCard = ({ flavor, index, onClick }) => {
   const [hovered, setHovered] = useState(false);
   
   // Map colors to warm tones
@@ -102,16 +184,17 @@ const FlavorCard = ({ flavor, index }) => {
   
   return (
     <motion.div
-      className="relative aspect-square"
+      className="relative aspect-square cursor-pointer"
       initial={{ opacity: 0, scale: 0.8 }}
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
       onHoverStart={() => setHovered(true)}
       onHoverEnd={() => setHovered(false)}
+      onClick={onClick}
     >
       <motion.div 
-        className={`w-full h-full bg-${warmColor}-500/10 rounded-2xl border border-${warmColor}-500/20 flex flex-col items-center justify-center p-6 backdrop-blur-sm overflow-hidden`}
+        className={`w-full h-full bg-${warmColor}-500/10 rounded-2xl border border-${warmColor}-500/20 flex flex-col items-center justify-center p-4 sm:p-6 backdrop-blur-sm overflow-hidden`}
         whileHover={{ scale: 1.05 }}
         transition={{ type: "spring", stiffness: 300 }}
       >
@@ -145,20 +228,20 @@ const FlavorCard = ({ flavor, index }) => {
           animate={hovered ? { y: -10 } : { y: 0 }}
           transition={{ duration: 0.3 }}
         >
-          <h3 className={`text-${warmColor}-400 text-xl md:text-2xl font-light tracking-wider mb-2`}>
+          <h3 className={`text-${warmColor}-400 text-lg sm:text-xl md:text-2xl font-light tracking-wider mb-2`}>
             {flavor.name}
           </h3>
-          <p className="text-amber-200/70 text-sm text-center">
+          <p className="text-amber-200/70 text-xs sm:text-sm text-center">
             {flavor.description}
           </p>
         </motion.div>
         
         <motion.div 
-          className="mt-4 opacity-0 absolute bottom-6"
+          className="mt-4 opacity-0 absolute bottom-4 sm:bottom-6"
           animate={hovered ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
           transition={{ duration: 0.3 }}
         >
-          <button className={`px-4 py-2 rounded-full text-${warmColor}-400 border border-${warmColor}-500/30 text-xs uppercase tracking-wider`}>
+          <button className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-${warmColor}-400 border border-${warmColor}-500/30 text-xs uppercase tracking-wider`}>
             Learn More
           </button>
         </motion.div>
@@ -351,10 +434,10 @@ const FlavorLab = () => {
       <Navigation />
       
       {/* Hero Section */}
-      <section className="pt-32 pb-16 relative">
-        <div className="max-w-7xl mx-auto px-6">
+      <section className="pt-28 md:pt-32 pb-12 md:pb-16 relative">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
           <motion.h1 
-            className="text-4xl md:text-6xl font-light text-center mb-6 tracking-wider"
+            className="text-3xl md:text-6xl font-light text-center mb-4 md:mb-6 tracking-wider"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
@@ -362,7 +445,7 @@ const FlavorLab = () => {
             FLAVOR <span className="text-amber-500">LAB</span>
           </motion.h1>
           <motion.p 
-            className="text-amber-200/70 max-w-2xl mx-auto text-center"
+            className="text-amber-200/70 max-w-2xl mx-auto text-center text-sm md:text-base"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
@@ -372,18 +455,21 @@ const FlavorLab = () => {
         </div>
         
         {/* Decorative Elements */}
-        <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-amber-500/5 rounded-full blur-3xl"></div>
-        <div className="absolute -top-24 -right-24 w-64 h-64 bg-amber-700/5 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-24 -left-24 w-48 md:w-64 h-48 md:h-64 bg-amber-500/5 rounded-full blur-3xl"></div>
+        <div className="absolute -top-24 -right-24 w-48 md:w-64 h-48 md:h-64 bg-amber-700/5 rounded-full blur-3xl"></div>
       </section>
       
       {/* Flavor Grid */}
-      <section className="py-16 relative">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
+      <section className="py-12 md:py-16 relative">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
             {flavors.map((flavor, index) => (
-              <div key={flavor.name} onClick={() => setSelectedFlavor(flavor)}>
-                <FlavorCard flavor={flavor} index={index} />
-              </div>
+              <FlavorCard 
+                key={flavor.name} 
+                flavor={flavor} 
+                index={index} 
+                onClick={() => setSelectedFlavor(flavor)}
+              />
             ))}
           </div>
         </div>
@@ -391,12 +477,12 @@ const FlavorLab = () => {
       
       {/* Selected Flavor Detail */}
       {selectedFlavor && (
-        <section className="py-16 relative">
-          <div className="max-w-7xl mx-auto px-6">
+        <section className="py-12 md:py-16 relative">
+          <div className="max-w-7xl mx-auto px-4 md:px-6">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="mb-12"
+              className="mb-8 md:mb-12"
             >
               <button 
                 className="text-amber-200/70 hover:text-amber-200 flex items-center gap-2"
@@ -413,7 +499,7 @@ const FlavorLab = () => {
       )}
       
       {/* Footer */}
-      <footer className="py-8 text-center text-sm text-amber-500/50 border-t border-amber-500/10 mt-16">
+      <footer className="py-8 text-center text-sm text-amber-500/50 border-t border-amber-500/10 mt-8 md:mt-16">
         <p>© 2024 Rasam Roots</p>
       </footer>
     </div>

@@ -8,33 +8,27 @@ const text = "Rasam is a 500-year old savory wellness tonic brewed with ancient 
 
 const TypingText = () => {
   const [displayedText, setDisplayedText] = useState("");
-  const [index, setIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    if (index < text.length) {
+    if (currentIndex < text.length) {
       const timeout = setTimeout(() => {
-        setDisplayedText((prev) => prev + text[index]);
-        setIndex(index + 1);
+        setDisplayedText(prev => prev + text[currentIndex]);
+        setCurrentIndex(prev => prev + 1);
       }, 50);
       return () => clearTimeout(timeout);
     }
-  }, [index]);
+  }, [currentIndex]);
 
   return (
-    <motion.div 
+    <motion.p 
+      className="text-amber-200/90 text-base md:text-lg max-w-xl mx-auto leading-relaxed"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="max-w-2xl mx-auto"
     >
-      <h2 className="text-lg md:text-xl font-light text-gray-300 tracking-wide leading-relaxed">
-        {displayedText}
-        <motion.span
-          className="inline-block bg-green-400 w-0.5 h-4 md:h-5 ml-1"
-          animate={{ opacity: [0, 1, 0] }}
-          transition={{ repeat: Infinity, duration: 0.8 }}
-        />
-      </h2>
-    </motion.div>
+      {displayedText}
+      <span className="text-amber-400 animate-pulse">|</span>
+    </motion.p>
   );
 };
 
@@ -134,7 +128,10 @@ const SlideToUnlock = () => {
   const controls = useAnimation();
 
   const handleDrag = (event, info) => {
-    if (info.point.x > 260) {
+    // Adjust threshold for mobile
+    const threshold = window.innerWidth < 640 ? 180 : 260;
+    
+    if (info.point.x > threshold) {
       controls.start({ width: "100%" });
       setTimeout(() => {
         setUnlocked(true);
@@ -150,7 +147,7 @@ const SlideToUnlock = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto w-full">
+    <div className="max-w-md mx-auto w-full px-4 md:px-0">
       {!unlocked ? (
         // Slider
         <div className="relative h-14 bg-black border border-amber-500/30 rounded-full overflow-hidden">
@@ -162,7 +159,7 @@ const SlideToUnlock = () => {
           <motion.div
             className="absolute left-0 h-full aspect-square cursor-grab active:cursor-grabbing bg-amber-500/20 rounded-full flex items-center justify-center border border-amber-500/30"
             drag="x"
-            dragConstraints={{ left: 0, right: 260 }}
+            dragConstraints={{ left: 0, right: window.innerWidth < 640 ? 180 : 260 }}
             onDrag={handleDrag}
             dragElastic={0}
             dragMomentum={false}
@@ -176,7 +173,7 @@ const SlideToUnlock = () => {
             </motion.div>
           </motion.div>
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <span className="text-amber-400 text-sm uppercase tracking-widest">
+            <span className="text-amber-400 text-xs sm:text-sm uppercase tracking-widest">
               Slide to Unlock Your Flavor
             </span>
           </div>
@@ -195,16 +192,16 @@ const SlideToUnlock = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email for early access"
-                className="w-full px-6 py-4 bg-black border border-amber-500/30 rounded-full text-white placeholder-amber-700/50 focus:outline-none focus:border-amber-500/50"
+                className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-black border border-amber-500/30 rounded-full text-white placeholder-amber-700/50 focus:outline-none focus:border-amber-500/50 text-sm sm:text-base"
                 required
               />
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 type="submit"
-                className="absolute right-2 top-1/2 -translate-y-1/2 px-6 py-2 bg-amber-500/20 text-amber-400 rounded-full text-sm uppercase tracking-wider hover:bg-amber-500/30 transition-colors"
+                className="absolute right-2 top-1/2 -translate-y-1/2 px-3 sm:px-6 py-1.5 sm:py-2 bg-amber-500/20 text-amber-400 rounded-full text-xs sm:text-sm uppercase tracking-wider hover:bg-amber-500/30 transition-colors"
               >
-                Join Waitlist
+                Join
               </motion.button>
             </form>
           ) : (
@@ -436,6 +433,7 @@ const FlavorLabSection = () => {
 
 const Navigation = () => {
   const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   useEffect(() => {
     const handleScroll = () => {
@@ -453,7 +451,8 @@ const Navigation = () => {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, delay: 0.5 }}
     >
-      <div className="max-w-7xl mx-auto px-6 grid grid-cols-3 items-center">
+      {/* Desktop Navigation */}
+      <div className="max-w-7xl mx-auto px-4 md:px-6 hidden md:grid grid-cols-3 items-center">
         {/* Left: Rasa Sanskrit */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
@@ -491,6 +490,86 @@ const Navigation = () => {
         {/* Right: Sanskrit Origin */}
         <SanskritSection />
       </div>
+
+      {/* Mobile Navigation */}
+      <div className="md:hidden px-4 flex justify-between items-center">
+        {/* Logo */}
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <motion.img
+            src={rasaSVG}
+            alt="Rasa Sanskrit"
+            className="h-10 opacity-95"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 0.95, scale: 1 }}
+            transition={{ duration: 1 }}
+          />
+        </motion.div>
+
+        {/* Mobile Menu Button */}
+        <motion.button
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="text-amber-400 p-2"
+          whileTap={{ scale: 0.95 }}
+        >
+          {mobileMenuOpen ? (
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          )}
+        </motion.button>
+      </div>
+
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <motion.div
+          className="md:hidden bg-black/90 backdrop-blur-md"
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          exit={{ opacity: 0, height: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <div className="px-4 py-4 flex flex-col space-y-4">
+            <Link 
+              to="/" 
+              className="text-amber-200 hover:text-white text-sm uppercase tracking-wider py-2 border-b border-amber-500/10"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Home
+            </Link>
+            <Link 
+              to="/flavor-lab" 
+              className="text-amber-200 hover:text-amber-400 text-sm uppercase tracking-wider py-2 border-b border-amber-500/10"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Flavor Lab
+            </Link>
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              className="px-4 py-2 bg-amber-500/10 border border-amber-500/30 rounded-full text-amber-400 text-sm uppercase tracking-wider hover:bg-amber-500/20 transition-colors self-start"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Join Waitlist
+            </motion.button>
+            
+            {/* Mobile Sanskrit Origin */}
+            <div className="pt-2 space-y-2">
+              <div className="text-xs uppercase tracking-[0.2em] text-amber-200/70">Sanskrit Origin</div>
+              <div className="flex items-center gap-2 text-sm">
+                <span className="text-amber-100 uppercase tracking-[0.15em]">RASA is</span>
+                <span className="text-amber-500 uppercase tracking-[0.15em]">Essence</span>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      )}
     </motion.nav>
   );
 };
@@ -505,29 +584,29 @@ const LandingPage = () => {
       <Navigation />
       
       {/* Hero Section */}
-      <header className="relative min-h-screen flex flex-col items-center justify-center px-6 pt-20">
+      <header className="relative min-h-screen flex flex-col items-center justify-center px-4 md:px-6 pt-20">
         <div className="max-w-7xl mx-auto w-full">
           {/* Center Logo */}
           <div className="space-y-8 text-center">
             <AnimatedLogo onComplete={() => setTimeout(() => setShowTyping(true), 400)} />
             
             {/* Typing Text and Waitlist Section */}
-            <div className="space-y-16">
+            <div className="space-y-12 md:space-y-16">
               {showTyping && (
                 <>
                   <TypingText />
                   
                   <motion.div 
-                    className="max-w-xl mx-auto space-y-12"
+                    className="max-w-xl mx-auto space-y-8 md:space-y-12"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 1.5 }}
                   >
-                    <div className="space-y-4 text-center">
-                      <h2 className="text-2xl font-light tracking-wide text-amber-100">
+                    <div className="space-y-3 md:space-y-4 text-center">
+                      <h2 className="text-xl md:text-2xl font-light tracking-wide text-amber-100">
                         Ancient Roots, Modern Wellness
                       </h2>
-                      <p className="text-amber-500 text-sm uppercase tracking-widest">
+                      <p className="text-amber-500 text-xs md:text-sm uppercase tracking-widest">
                         Be the first to know when we launch
                       </p>
                     </div>
@@ -541,8 +620,8 @@ const LandingPage = () => {
       </header>
 
       {/* Features Section */}
-      <section className="py-24 relative">
-        <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 px-6">
+      <section className="py-16 md:py-24 relative">
+        <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 px-4 md:px-6">
           <Feature
             title="Ancient Wellness Tradition"
             description="Drawing from 500 years of traditional medicine, our tonic harnesses the power of time-tested herbs and spices."
@@ -563,10 +642,10 @@ const LandingPage = () => {
       </section>
 
       {/* Flavor Lab Teaser */}
-      <section className="py-24 relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6 text-center">
+      <section className="py-16 md:py-24 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 text-center">
           <motion.h2 
-            className="text-3xl md:text-4xl font-light text-white mb-6 tracking-wider"
+            className="text-2xl md:text-4xl font-light text-white mb-4 md:mb-6 tracking-wider"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -575,7 +654,7 @@ const LandingPage = () => {
             DISCOVER OUR <span className="text-amber-500">FLAVOR LAB</span>
           </motion.h2>
           <motion.p 
-            className="text-amber-200/70 max-w-2xl mx-auto mb-10"
+            className="text-amber-200/70 max-w-2xl mx-auto mb-8 md:mb-10 text-sm md:text-base"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -592,7 +671,7 @@ const LandingPage = () => {
           >
             <Link to="/flavor-lab">
               <motion.button
-                className="px-8 py-4 bg-black border border-amber-500/30 rounded-full text-amber-400 text-lg uppercase tracking-widest flex items-center gap-3 mx-auto hover:bg-amber-500/10 transition-colors"
+                className="px-6 md:px-8 py-3 md:py-4 bg-black border border-amber-500/30 rounded-full text-amber-400 text-base md:text-lg uppercase tracking-widest flex items-center gap-3 mx-auto hover:bg-amber-500/10 transition-colors"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -609,8 +688,8 @@ const LandingPage = () => {
         </div>
         
         {/* Decorative Elements */}
-        <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-amber-500/5 rounded-full blur-3xl"></div>
-        <div className="absolute -top-24 -right-24 w-64 h-64 bg-amber-700/5 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-24 -left-24 w-48 md:w-64 h-48 md:h-64 bg-amber-500/5 rounded-full blur-3xl"></div>
+        <div className="absolute -top-24 -right-24 w-48 md:w-64 h-48 md:h-64 bg-amber-700/5 rounded-full blur-3xl"></div>
       </section>
     </div>
   );
