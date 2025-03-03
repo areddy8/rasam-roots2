@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: 'Agrandir';
+    src: url('/fonts/Agrandir-Regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Agrandir Bold';
+    src: url('/fonts/Agrandir-TextBold.otf') format('opentype');
+    font-weight: bold;
+    font-style: normal;
+  }
+  
+  /* Add additional styles as needed */
+  
