@@ -45,25 +45,25 @@ const Navigation = () => {
           <motion.img
             src={rasaSVG}
             alt="Rasa Sanskrit"
-            className="w-32 md:w-40 opacity-70 brightness-[0.85] saturate-[0.85] contrast-[0.9]"
+            className="w-40 md:w-48 sepia-[0.1] brightness-110 contrast-[0.9] opacity-90"
             initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 0.7, scale: 1 }}
+            animate={{ opacity: 0.9, scale: 1 }}
             transition={{ duration: 1 }}
           />
         </motion.div>
         
         {/* Center: Navigation Links */}
         <div className="flex items-center justify-center gap-8">
-          <Link to="/" className="text-amber-200 hover:text-white text-sm uppercase tracking-wider transition-colors">
+          <Link to="/" className="text-amber-200 hover:text-white text-sm uppercase tracking-wider transition-colors cursor-pointer">
             Home
           </Link>
-          <Link to="/flavor-lab" className="text-amber-400 text-sm uppercase tracking-wider">
+          <Link to="/flavor-lab" className="text-amber-400 text-sm uppercase tracking-wider cursor-pointer">
             Spice Lab
           </Link>
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="px-4 py-2 bg-amber-500/10 border border-amber-500/30 rounded-full text-amber-400 text-sm uppercase tracking-wider hover:bg-amber-500/20 transition-colors"
+            className="px-4 py-2 bg-amber-500/10 border border-amber-500/30 rounded-full text-amber-400 text-sm uppercase tracking-wider hover:bg-amber-500/20 transition-colors cursor-pointer"
           >
             Join Waitlist
           </motion.button>
@@ -107,9 +107,9 @@ const Navigation = () => {
             <motion.img
               src={rasaSVG}
               alt="Rasa Sanskrit"
-              className="h-14 md:h-16 opacity-80 brightness-[0.95] saturate-[0.9] contrast-[0.9]"
+              className="h-16 md:h-20 sepia-[0.1] brightness-110 contrast-[0.9] opacity-90"
               initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 0.8, scale: 1 }}
+              animate={{ opacity: 0.9, scale: 1 }}
               transition={{ duration: 1 }}
             />
           </motion.div>
@@ -212,7 +212,7 @@ const FlavorCard = ({ flavor, index, isSelected, onClick }) => {
   
   return (
     <motion.div
-      className={`w-full h-full bg-${warmColor}-500/10 rounded-2xl border border-${warmColor}-500/20 flex flex-col items-center justify-center p-4 sm:p-6 backdrop-blur-sm overflow-hidden ${isSelected ? 'ring-2 ring-amber-500' : ''}`}
+      className={`w-full h-full bg-${warmColor}-500/10 rounded-2xl border border-${warmColor}-500/20 flex flex-col items-center justify-center p-4 sm:p-6 backdrop-blur-sm overflow-hidden ${isSelected ? 'ring-2 ring-amber-500' : ''} [cursor:url('/images/pepper-orange-filled.svg')_16_16,pointer]`}
       whileHover={{ scale: isSelected ? 1 : 1.05 }}
       transition={{ type: "spring", stiffness: 300 }}
       onHoverStart={() => setHovered(true)}
@@ -456,12 +456,12 @@ const FlavorLab = () => {
   };
 
   return (
-    <div className="relative min-h-screen bg-black text-white overflow-hidden">
+    <div className="relative min-h-screen bg-black text-white overflow-hidden [cursor:url('/images/pepper-orange.svg')_16_16,auto]">
       <GridBackground />
       <Navigation />
       
       {/* Hero Section */}
-      <section className="pt-32 md:pt-40 pb-12 md:pb-16 relative">
+      <section className="pt-40 md:pt-48 pb-8 md:pb-12 relative">
         <div className="max-w-7xl mx-auto px-4 md:px-6">
           <motion.h1 
             className="text-3xl md:text-6xl font-light text-center mb-4 md:mb-6 tracking-wider"
@@ -487,7 +487,7 @@ const FlavorLab = () => {
       </section>
       
       {/* Flavor Grid with Animation */}
-      <section className="py-12 md:py-16 relative">
+      <section className="py-8 md:py-12 relative">
         <div className="max-w-7xl mx-auto px-4 md:px-6">
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
             {/* Selected Flavor at Top */}

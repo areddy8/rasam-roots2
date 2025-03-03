@@ -3,6 +3,7 @@ import { motion, useAnimation } from "framer-motion";
 import { Link } from "react-router-dom";
 import rasaSVG from "/images/rasa.svg";
 import textSVG from "/images/text.svg";
+import StorySection from '../components/StorySection';
 
 const text = "Rasam is a 500-year old savory wellness tonic brewed with ancient spices and herbs.";
 
@@ -529,9 +530,9 @@ const Navigation = () => {
           <motion.img
             src={rasaSVG}
             alt="Rasa Sanskrit"
-            className="w-32 md:w-40 opacity-95"
+            className="w-40 md:w-48 sepia-[0.1] brightness-110 contrast-[0.9] opacity-90"
             initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 0.95, scale: 1 }}
+            animate={{ opacity: 0.9, scale: 1 }}
             transition={{ duration: 1 }}
           />
         </motion.div>
@@ -568,9 +569,9 @@ const Navigation = () => {
           <motion.img
             src={rasaSVG}
             alt="Rasa Sanskrit"
-            className="h-14 md:h-16 opacity-95"
+            className="h-16 md:h-20 sepia-[0.1] brightness-110 contrast-[0.9] opacity-90"
             initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 0.95, scale: 1 }}
+            animate={{ opacity: 0.9, scale: 1 }}
             transition={{ duration: 1 }}
           />
         </motion.div>
@@ -757,6 +758,9 @@ const LandingPage = () => {
         <div className="absolute -bottom-24 -left-24 w-48 md:w-64 h-48 md:h-64 bg-amber-500/5 rounded-full blur-3xl"></div>
         <div className="absolute -top-24 -right-24 w-48 md:w-64 h-48 md:h-64 bg-amber-700/5 rounded-full blur-3xl"></div>
       </section>
+
+      {/* Story Section */}
+      <StorySection />
     </div>
   );
 };
