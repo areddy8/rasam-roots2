@@ -57,9 +57,9 @@ const AnimatedLogo = ({ onComplete }) => {
       <motion.img
         src={textSVG}
         alt="Rasam Roots"
-        className="w-full"
+        className="w-full sepia-[0.1] brightness-110 contrast-[0.9] opacity-90"
         initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+        animate={{ opacity: 0.9, y: 0 }}
         transition={{ duration: 1 }}
       />
     </div>

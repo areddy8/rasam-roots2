@@ -45,9 +45,9 @@ const Navigation = () => {
           <motion.img
             src={rasaSVG}
             alt="Rasa Sanskrit"
-            className="w-32 md:w-40 opacity-80 brightness-[0.95] saturate-[0.9] contrast-[0.95]"
+            className="w-32 md:w-40 opacity-70 brightness-[0.85] saturate-[0.85] contrast-[0.9]"
             initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 0.8, scale: 1 }}
+            animate={{ opacity: 0.7, scale: 1 }}
             transition={{ duration: 1 }}
           />
         </motion.div>
@@ -107,9 +107,9 @@ const Navigation = () => {
             <motion.img
               src={rasaSVG}
               alt="Rasa Sanskrit"
-              className="h-10 opacity-80 brightness-[0.95] saturate-[0.9] contrast-[0.95]"
+              className="h-10 opacity-70 brightness-[0.85] saturate-[0.85] contrast-[0.9]"
               initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 0.8, scale: 1 }}
+              animate={{ opacity: 0.7, scale: 1 }}
               transition={{ duration: 1 }}
             />
           </motion.div>
